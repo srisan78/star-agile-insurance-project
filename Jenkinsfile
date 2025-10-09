@@ -27,19 +27,19 @@ pipeline {
                 sh 'docker build -t myinsurance:$BUILD_NUMBER .'
             }
         }
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([string(credentialsId: 'DOCKER_HUB_PASWD', variable: 'DOCKER_HUB_PASWD')]) {
+                    sh 'docker login -u sridhar76 -p $DOCKER_HUB_PASWD'
+                }
+                sh 'docker tag myinsurance:$BUILD_NUMBER sridhar76/myinsurance:$BUILD_NUMBER'
+                sh 'docker push sridhar76/myinsurance:$BUILD_NUMBER'
+            }
+        }
         stage('Run Docker Container') {
             steps {
                 echo 'Running Docker container with port mapping'
                 sh 'docker run -d -p 8080:9190 --name myinsurance_container sridhar76/myinsurance:$BUILD_NUMBER'
-            }
-        }
-        stage('Push Docker Image') {
-            steps {
-                withCredentials([string(credentialsId: 'DOCKER_HUB_PASWD', variable: 'DOCKER_HUB_PASWD')]) {
-                    sh 'docker login -u sridhar76 -p ${DOCKER_HUB_PASWD}'
-                }
-                sh 'docker tag myinsurance:$BUILD_NUMBER sridhar76/myinsurance:$BUILD_NUMBER'
-                sh 'docker push sridhar76/myinsurance:$BUILD_NUMBER'
             }
         }
     }
