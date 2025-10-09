@@ -39,7 +39,7 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 echo 'Running Docker container with port mapping'
-                sh 'docker run -d -p 9080:9190 --name myinsurance_container sridhar76/myinsurance:$BUILD_NUMBER'
+                sh 'docker run -d -p 9080:8081 --name myinsurance_container sridhar76/myinsurance:$BUILD_NUMBER'
             }
         }
     }
